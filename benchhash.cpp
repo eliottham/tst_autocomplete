@@ -1,9 +1,4 @@
-/* PA2
- * Name1: Khelsey Gozum // A12070231
- * Name2: Eliott Ham // A13186685
- * Date: October 26, 2017
- * Overview of benchhash.cpp: Compare the efficiency of two different hash functions.
- */
+/* Overview of benchhash.cpp: Compare the efficiency of two different hash functions. */
 
 #include <string>
 #include <iostream>
@@ -13,51 +8,51 @@
 #include <typeinfo>
 using namespace std;
 
-// First hash function
+// first hash function
 unsigned int hash_1(string str, unsigned int table_size);
 
-// Second hash function and constants used in it
+// second hash function and constants used in it
 unsigned int hash_2(string str, unsigned int table_size);
 #define A 54059
 #define B 76963
 #define FIRSTH 37
 
-// Helper function to print the statistics of each hash function
+// helper function to print the statistics of each hash function
 void hash_stats(vector<int> index_hits, const unsigned int table_size, int fn_id);
 
 int main(int argc, char* argv[])
 {
 
-  // Check for proper number of arguments 
+  // check for proper number of arguments 
   if(argc != 3) {
     cerr << "Expected arguments: ./benchhash dictfile num_words" << endl;
     return -1;
   }
 
-  // File used to gain words
+  // file used to gain words
   string dictfile = argv[1];
 
-  // Number of words to get from the dictionary
+  // number of words to get from the dictionary
   char* endPtr;
   unsigned int num_words = strtol(argv[2], &endPtr, 10);
 
-  // Initialize ifstream
+  // initialize ifstream
   ifstream infile;
   
-  // Check that dictfile is a valid file  
+  // check that dictfile is a valid file  
   infile.open(dictfile, ios::binary);
   if(!infile.good()) { 
     cerr << "Please use a valid file for dictfile." << endl;
     return -1;
   }
  
-  // Check that num_words is a valid int
+  // check that num_words is a valid int
   if(*(endPtr + 1) == NULL) {
     cerr << "Please use a valid number for num_words." << endl;
     return -1;
   }
  
-  // Variable to gain word from file and store into words vector
+  // variable to gain word from file and store into words vector
   string word;
   vector<string> words;
 
@@ -65,12 +60,12 @@ int main(int argc, char* argv[])
  The following commented out code was to verify the expected output of each function.
  ----------------------------------------------------------------------------------*/
 /*
-  // Compare hash indexes returned by hash_1 to those done by hand
+  // compare hash indexes returned by hash_1 to those done by hand
   cout << "\n~~~ Testing expected hash values for hash_1, table size 4. ~~~" << endl;
 
   vector<pair<string, int>> word_vals;
   
-  // Push in strings with the hash index gained from the code by hand
+  // push in strings with the hash index gained from the code by hand
   word_vals.push_back(make_pair("cat", 2));
   word_vals.push_back(make_pair("dogs", 3));
   word_vals.push_back(make_pair("hash", 2));
@@ -86,12 +81,12 @@ int main(int argc, char* argv[])
 
   cout << "End of testing for hash_1." << endl;
 
-  // Compare hash indexes returned by hash_2 to those done by hand 
+  // compare hash indexes returned by hash_2 to those done by hand 
   cout << "\n~~~ Testing expected hash values for hash_2, table size 4. ~~~" << endl;
   
   word_vals.clear();
   
-  // Push in strings with the hash index gained from the code by hand
+  // push in strings with the hash index gained from the code by hand
   word_vals.push_back(make_pair("cat", 3));
   word_vals.push_back(make_pair("dogs", 2));
   word_vals.push_back(make_pair("hash", 1));
@@ -107,7 +102,7 @@ int main(int argc, char* argv[])
 
   cout << "End of testing for hash_2." << endl;
 */
-  // Taking a collection of words from the dictionary
+  // taking a collection of words from the dictionary
   for(unsigned int i = 0; i < num_words; i++) {
     getline(infile, word);
     words.push_back(word);
@@ -115,31 +110,31 @@ int main(int argc, char* argv[])
 
   infile.close();
 
-  // Printing statistics of each hash function
+  // printing statistics of each hash function
   
-  int index; // Calculated index of the hash table
-  const unsigned int table_size = 2 * num_words; // Size of the simulated hash table
-  vector<int> index_hits(table_size); // The # of hits a given index gets mapped to
+  int index; // calculated index of the hash table
+  const unsigned int table_size = 2 * num_words; // size of the simulated hash table
+  vector<int> index_hits(table_size); // the # of hits a given index gets mapped to
 
-  // Calculate the index of each string
+  // calculate the index of each string
   for(unsigned int i = 0; i < words.size(); i++) {
     index = hash_1(words[i], table_size); 
-    index_hits[index] += 1;  // Increment # strings that map to a given index
+    index_hits[index] += 1;  // increment # strings that map to a given index
   }
 
-  hash_stats(index_hits, table_size, 1); // Print stats for hash_1
+  hash_stats(index_hits, table_size, 1); // print stats for hash_1
 
-  // Calculating statistics for hash function 2
+  // calculating statistics for hash function 2
   index_hits.clear();
   index_hits.resize(table_size);
 
-  // Calculate the index of each string
+  // calculate the index of each string
   for(unsigned int i = 0; i < words.size(); i++) {
     index = hash_2(words[i], table_size);
-    index_hits[index] += 1; // Increment # strings that map to a given index
+    index_hits[index] += 1; // increment # strings that map to a given index
   }
 
-  hash_stats(index_hits, table_size, 2); // Print stats for hash_2
+  hash_stats(index_hits, table_size, 2); // print stats for hash_2
   
   return 1;  
 } 
@@ -147,18 +142,18 @@ int main(int argc, char* argv[])
 void hash_stats(vector<int> index_hits, const unsigned int table_size, int fn_id)
 {
   vector<int> table_hits(table_size);
-  // Count the # of slots that are hit i times
+  // count the # of slots that are hit i times
   for(unsigned int i = 0; i < table_size; i++) {
-    // Calculate the number of slots in the table that have index_hits  
+    // calculate the number of slots in the table that have index_hits  
     table_hits[index_hits[i]] += 1;
   }
 
-  /* Printing the results of the table collisions */
+  /* printing the results of the table collisions */
   cout << "\nPrinting statistics for hash function " << fn_id
        << " with table size " << table_size << endl;
   cout << "#hits\t#slots receiving that #hits" << endl;  
 
-  // Print the number of slots that had i hits
+  // print the number of slots that had i hits
   unsigned int max_hit;
   for(unsigned int i = 0; i < table_size; i++) {
     if(table_hits[i] == 0) {
@@ -168,7 +163,7 @@ void hash_stats(vector<int> index_hits, const unsigned int table_size, int fn_id
     cout << i << "\t" << table_hits[i] << endl;
   }
 
-  // Calculate the average number of steps
+  // calculate the average number of steps
   float avg_steps = 0;
   unsigned int step_sum = 0;
   for(unsigned int j = 1; j <= max_hit; j++) {
@@ -186,7 +181,7 @@ void hash_stats(vector<int> index_hits, const unsigned int table_size, int fn_id
        << max_hit << endl;
 }
 
-/* First hash function taken from stackoverflow */
+/* first hash function taken from stackoverflow */
 unsigned int hash_1(string str, unsigned int table_size)
 {
   unsigned int hashval = 0;
@@ -198,7 +193,7 @@ unsigned int hash_1(string str, unsigned int table_size)
   return hashval % table_size;
 }
 
-/* Second hash function taken from stackoverflow */
+/* second hash function taken from stackoverflow */
 unsigned int hash_2(string str, unsigned int table_size)
 {
   unsigned int h = FIRSTH;

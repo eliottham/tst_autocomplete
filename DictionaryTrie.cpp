@@ -1,9 +1,6 @@
-/*PA2
- *Name 1: Khelsey Gozum // A12070231
- *Name 2: Eliott Ham // A13186685
- *Date: October 26, 2017
- *Overview of DictionaryTrie.cpp: Implemetnation of a ternary search tree to 
- *  store words in the dictionary and also find those words.
+/*
+ * Overview of DictionaryTrie.cpp: Implemetnation of a ternary search tree to 
+ * store words in the dictionary and also find those words.
  */
 
 using namespace std;
@@ -17,7 +14,7 @@ using namespace std;
 #include <algorithm>
 #include <queue>
 
-/* Create a new Dictionary that uses a Trie back end */
+/* create a new Dictionary that uses a Trie back end */
 DictionaryTrie::DictionaryTrie() : root(nullptr) {}
 
 /* initialize constructor */
@@ -30,31 +27,31 @@ TSTNode::TSTNode(const char &d) : value(d), left(0), right(0), middle(0),
  * invalid (empty string) */
 bool DictionaryTrie::insert(std::string word, unsigned int freq)
 {
-  //check for if the word length to be inserted is empty
+  // check for if the word length to be inserted is empty
   if(word.length() == 0){
     return false;
   }
  
-  //set TSTNode to root
+  // set TSTNode to root
   TSTNode * current = root;
   
-  //if there is no root
+  // if there is no root
   if(!root) {
-    //create the root with the value of the first letter of the word
+    // create the root with the value of the first letter of the word
     root = new TSTNode(word[0]);
     current = root;
 
-    /*traverse through the word and create nodes for each letter after the 
-      initial first letter*/ 
+    /* traverse through the word and create nodes for each letter after the 
+       initial first letter */ 
     for(unsigned int k = 1; k < word.length(); k++) {
       current->middle = new TSTNode(word[k]);
       current = current->middle;
       
-      //once you reach the last letter, set the words frequency and denotes
-      //the end of the string
+      // once you reach the last letter, set the words frequency and denotes
+      // the end of the string
       if((k == word.length() - 1)) {
-	current->frequency = freq;
-	current->endOfString = true;
+	     current->frequency = freq;
+	     current->endOfString = true;
         return true;
       }
     }      
@@ -63,83 +60,84 @@ bool DictionaryTrie::insert(std::string word, unsigned int freq)
   unsigned int i = 0;
 
   while(1){
-    /*compare to see if the current letter of the word is of smaller value
-     *than the current nodes value*/
+    /* compare to see if the current letter of the word is of smaller value
+     * than the current nodes value*/
     if(word[i] < current->value) {
 
-      //set current to current-> left if theres a left child
+      // set current to current-> left if theres a left child
       if(current->left) { 
         current = current->left;
         continue;
       }
   
-      //create a new node if there is no possible left child for the word
+      // create a new node if there is no possible left child for the word
       current->left = new TSTNode(word[i]);
       current = current->left;
       i++;
       break;
+
     }
 
-    /*compare to see if the current letter of the word is of greater value 
-     *than the current nodes value*/
+    /* compare to see if the current letter of the word is of greater value 
+     * than the current nodes value*/
     if(word[i] > current->value) {
 
-      //set current to current-> if theres a right child      
+      // set current to current-> if theres a right child      
       if(current->right) {
-	current = current->right;
-	continue;
+	     current = current->right;
+	     continue;
       }
 
-      //create a new node if there is no possible right child for the word
+      // create a new node if there is no possible right child for the word
       current->right = new TSTNode(word[i]);
       current = current->right;
       i++;
       break;
     }
 
-    /*check if the current letter equal the current value*/ 
+    /* check if the current letter equal the current value*/ 
     if(word[i] == current->value) {
       if((i == word.length() - 1) && current->endOfString == true) {
-        //switch frequencies depending if duplicate has greater freq
-	if(current->frequency > freq) {
-	  return false;
+        // switch frequencies depending if duplicate has greater freq
+	     if(current->frequency > freq) {
+	       return false;
         }
-        //if the new frequency is greater, change to this frequency
-        current->frequency = freq;
-	return false;
+        // if the new frequency is greater, change to this frequency
+      current->frequency = freq;
+	     return false;
       }
 
-      //if i is on the last letter of the word break out of the loop
+      // if i is on the last letter of the word break out of the loop
       if(i == word.length() - 1) {
         i++;
         break;
       }  
-      //if the current node has a middle child change current to that child 
-      //and continue
+      // if the current node has a middle child change current to that child 
+      // and continue
       if(current->middle) {
-	current = current->middle;
+	     current = current->middle;
         i++;
-	continue;
+	     continue;
       }
-      //if not increment i so that we are at the next level and break
+      // if not increment i so that we are at the next level and break
       i++;
       break;
     }
   }
  
-  //if i is the length of the word or the word is 1 letter
+  // if i is the length of the word or the word is 1 letter
   if(i == word.length()|| word.length() == 1) {
-    //we make the current node a word node 
+    // we make the current node a word node 
     current->endOfString = true;
     current->frequency = freq;
     return true;
   }
   
-  //we add on the new nodes to the existing prefix
+  // we add on the new nodes to the existing prefix
   for(unsigned int j = i; j < word.length(); j++) {
     current->middle = new TSTNode(word[j]);      
     current = current->middle;
-    //we create the word node as the last letter of the word
+    // we create the word node as the last letter of the word
     if(j == word.length() - 1) {
       current->frequency = freq;
       current->endOfString = true;
@@ -150,54 +148,54 @@ bool DictionaryTrie::insert(std::string word, unsigned int freq)
   return false;
 }
 
-/* Return true if word is in the dictionary, and false otherwise */
+/* return true if word is in the dictionary, and false otherwise */
 bool DictionaryTrie::find(std::string word) const
 {
   TSTNode * current = root;
   
-  //if the tree is empty 
+  // if the tree is empty 
   if(!root){
     return false;
   }
 
-  //set the counter to 0
+  // set the counter to 0
   unsigned int i = 0;
   
   while(1) {
-    //if the letter at  the index is less than current's value, traverse to 
-    //the left of the tree 
+    // if the letter at  the index is less than current's value, traverse to 
+    // the left of the tree 
     if(word[i] < current->value) {
       if(current->left) { 
         current = current->left;
-	continue;
+	      continue;
       }
       break;
     }
 
-    //if the letter at  the index is greater than current's value, traverse to 
-    //the right of the tree 
+    // if the letter at  the index is greater than current's value, traverse to 
+    // the right of the tree 
     if(word[i] > current->value) {
       if(current->right) {
         current = current->right;
-	continue;
+	      continue;
       }
       break;
     }
     
-    //if the letter at  the index is equal than current's value, traverse to 
-    //the middle of the tree 
+    // if the letter at  the index is equal than current's value, traverse to 
+    // the middle of the tree 
     if(word[i] == current->value) {
-      //if it matches till the word's last value and end of string is denoted
-      //word has been found
+      // if it matches till the word's last value and end of string is denoted
+      // word has been found
       if((i == word.length() - 1) && current->endOfString) {
         return true;
       }
     
-      //continue to interate, changing the current till above if stmt is holds
+      // continue to interate, changing the current till above if stmt is holds
       i++;
       if(current->middle) {
         current = current->middle;
-	continue;
+	      continue;
       }
       break;
     }
@@ -224,19 +222,19 @@ vector<string> DictionaryTrie::predictCompletions(string prefix, unsigned int nu
 
   /*Invalid input checks*/
 
-  //case where the prefix is an empty string 
+  // case where the prefix is an empty string 
   if(prefix.empty()){
     cerr << "Invalid Input. Please retry with correct input" << endl;
     return words;
   }
 
-  //case where num_completions is less than 0
+  // case where num_completions is less than 0
   if(num_completions < 0){
     cerr << "Invalid Input. Please retry with correct input" << endl;
     return words;
   }
 
-  //case where prefix contains non-dictionary characters
+  // case where prefix contains non-dictionary characters
   for(unsigned int i = 0; i < prefix.length(); i++){
     if((char)prefix[i] < 'a' || (char)prefix[i] > 'z'){
       cerr << "Invalid Input. Please retry with correct input" << endl;
@@ -246,97 +244,97 @@ vector<string> DictionaryTrie::predictCompletions(string prefix, unsigned int nu
 
   TSTNode * current = root;
   
-  //set the counter to 0
+  // set the counter to 0
   unsigned int i = 0;
 
   while(1) {
-    //if the letter at  the index is less than current's value, traverse to 
-    //the left of the tree 
+    // if the letter at  the index is less than current's value, traverse to 
+    // the left of the tree 
     if(prefix[i] < current->value) {
       if(current->left) { 
         current = current->left;
-	continue;
+	      continue;
       }
       return words;
     }
 
-    //if the letter at  the index is greater than current's value, traverse to 
-    //the right of the tree 
+    // if the letter at  the index is greater than current's value, traverse to 
+    // the right of the tree 
     if(prefix[i] > current->value) {
       if(current->right) {
         current = current->right;
-	continue;
+	      continue;
       }
       return words;
     }
     
-    //if the letter at  the index is equal than current's value, traverse to 
-    //the middle of the tree 
+    // if the letter at  the index is equal than current's value, traverse to 
+    // the middle of the tree 
     if(prefix[i] == current->value) {
       i++;
-      //breaks out of while when we found the prefix in the tree 
+      // breaks out of while when we found the prefix in the tree 
       if(i == prefix.length()) {
-	break;
+	    break;
       }
-      //continues to iterate if there is a middle child
+      // continues to iterate if there is a middle child
       if(current->middle) {
         current = current->middle;
-	continue;
+	      continue;
       }
       break;
     }
 
   }
 
-  //initialize queue
+  // initialize queue
   queue<TSTNode*> q;
   string suffix = "";
   
-  //pushes current-> middle to the queue
+  // pushes current-> middle to the queue
   if(current->middle) {
     q.push(current->middle);
   }  
 
-  //computes while the queue is not empty
+  // computes while the queue is not empty
   while(!q.empty()) {
-    //set to an empty string
+    // set to an empty string
     suffix = "";
    
     current = q.front();
     q.pop();
    
-    //recursively push available left children 
+    // recursively push available left children 
     if(current->left) {
       q.push(current->left);
     }
 
-    //recursively push available right children
+    // recursively push available right children
     if(current->right) {
       q.push(current->right);
     }
 
   
     while(1){
-      //append the suffix
+      // append the suffix
       suffix = suffix + current->value;
 
-      //we know its the end of the word, we add the word and freq to a vector  
+      // we know its the end of the word, we add the word and freq to a vector  
       if(current->endOfString) { 
         wordPairs.push_back(make_pair((prefix + suffix), current->frequency));
       }
 
-      //continues to iterate if theres a middle child, breaks if not
+      // continues to iterate if theres a middle child, breaks if not
       if(!current->middle) {
-	break;
+	     break;
       }
       current = current->middle;
     }
   }
   
-  //sorts the elements in the vector by frequency
+  // sorts the elements in the vector by frequency
   sort(wordPairs.begin(), wordPairs.end(), sortHelper);
   
-  //adds the sorted words into the vector
+  // adds the sorted words into the vector
   for(unsigned int i = 0; i < wordPairs.size(); i++) {
     words.push_back(wordPairs[i].first);
     if(i == num_completions - 1) {
@@ -365,17 +363,17 @@ void DictionaryTrie::deleteAll(TSTNode* n)
     return;
   }
 
-  //recursively delete while n has a left child
+  // recursively delete while n has a left child
   if(n->left){
    deleteAll(n->left);
   }
 
-  //recursively delete while n has a right child
+  // recursively delete while n has a right child
   if(n->right){
    deleteAll(n->right);
   }
 
-  //recursively delete while n has a middle child
+  // recursively delete while n has a middle child
   if(n->middle){
     deleteAll(n->middle);
   }

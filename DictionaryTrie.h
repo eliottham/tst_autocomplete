@@ -1,12 +1,8 @@
-/*PA2
- *Name 1: Khelsey Gozum // A12070231
- *Name 2: Eliott Ham // A13186685
- *Date: October 26, 2017
- *Overview of DictionaryTrie.h: Declare the functions necessary for the cpp file
+/*
+ * Overview of DictionaryTrie.h: Declare the functions necessary for the cpp file
  * and add data member of TST.  Implementation of a TSTNode class to use for 
  * the nodes in the TST
  */
-
 
 #ifndef DICTIONARY_TRIE_H
 #define DICTIONARY_TRIE_H
@@ -23,14 +19,14 @@ using namespace std;
 class TSTNode
 {
   public: 
-        char value;
-	TSTNode* left;
-	TSTNode* right;
-	TSTNode* middle;
-	bool endOfString;
-	unsigned int frequency;
-	//constructor
-	TSTNode(const char &d);
+    char value;
+  	TSTNode* left;
+  	TSTNode* right;
+  	TSTNode* middle;
+  	bool endOfString;
+  	unsigned int frequency;
+  	//constructor
+  	TSTNode(const char &d);
 };
 
 class DictionaryTrie
@@ -67,7 +63,6 @@ public:
   ~DictionaryTrie();
 
 private:
-  // Add your own data members and methods here
   TSTNode* root;
   void deleteAll(TSTNode* n);
 };

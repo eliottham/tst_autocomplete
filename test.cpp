@@ -14,16 +14,16 @@ using namespace std;
 int main(int argc, char** argv)
 {
 
-  //Initialize words
+  // initialize words
   vector<std::string> words;
   vector<string>::iterator wit;
   vector<string>::iterator wen;
-  //initialize nonwords
+  // initialize nonwords
   set<string> nope;
   set<string>::iterator nit;
   set<string>::iterator nen;
 
-  //Initialize data structures
+  // initialize data structures
   DictionaryBST d_bst;
   DictionaryHashtable d_ht;
   DictionaryTrie dt;
